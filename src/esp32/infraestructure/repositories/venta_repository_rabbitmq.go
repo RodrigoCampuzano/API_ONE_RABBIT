@@ -15,7 +15,7 @@ func NewVentaRepositoryRabbitMQ() *VentaRepositoryRabbitMQ {
 }
 
 func (r *VentaRepositoryRabbitMQ) EnviarVenta(venta entities.Venta) error {
-	conn, err := amqp.Dial("amqp://rodrigo:123456789@54.152.174.138:5672/")
+	conn, err := amqp.Dial("amqp://rodrigo:123456789@52.0.68.153:5672/")
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %s", err)
 	}
