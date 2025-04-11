@@ -14,7 +14,7 @@ func main() {
     ventaRepo := repositories.NewVentaRepositoryRabbitMQ()
     emailRepo := repositories.NewEmailMockRepository()
 
-    ventaRouter := routes.NewVentaRouter(ventaRepo)
+    ventaRouter := routes.NewVentaRouter(ventaRepo, emailRepo)
     emailRouter := routes.NewEmailRouter(emailRepo)
 
     mux := http.NewServeMux()

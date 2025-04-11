@@ -56,14 +56,12 @@ func (c *VentaController) EnviarVenta(w http.ResponseWriter, r *http.Request) {
 	}
 	cantidad := int(cantidadFloat)
 
-	// Procesar la venta
 	err := c.ventaService.ProcesarVenta(producto, cantidad)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Respuesta exitosa
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
