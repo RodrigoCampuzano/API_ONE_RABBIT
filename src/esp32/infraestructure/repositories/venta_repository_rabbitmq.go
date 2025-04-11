@@ -6,16 +6,17 @@ import (
 
 	"github.com/streadway/amqp"
 	"API_ONE/src/esp32/domain/entities"
+	"API_ONE/src/esp32/domain/repositories"
 )
 
 type VentaRepositoryRabbitMQ struct{}
 
-func NewVentaRepositoryRabbitMQ() *VentaRepositoryRabbitMQ {
+func NewVentaRepositoryRabbitMQ() repositories.VentaRepository {
 	return &VentaRepositoryRabbitMQ{}
 }
 
 func (r *VentaRepositoryRabbitMQ) EnviarVenta(venta entities.Venta) error {
-	conn, err := amqp.Dial("amqp://rodrigo:123456789@52.0.68.153:5672/")
+	conn, err := amqp.Dial("amqp://admin:password@52.0.68.153:5672/")
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %s", err)
 	}
@@ -28,12 +29,9 @@ func (r *VentaRepositoryRabbitMQ) EnviarVenta(venta entities.Venta) error {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"cola_ventas", // nombre de la cola
-		false,        // durable
-		false,        // eliminar cuando no esté en uso
-		false,        // exclusiva
-		false,        // no esperar
-		nil,          // argumentos adicionales
+		"cola_ventas",
+		false, false, false, false,
+		nil,
 	)
 	if err != nil {
 		log.Fatalf("Failed to declare a queue: %s", err)
@@ -45,10 +43,10 @@ func (r *VentaRepositoryRabbitMQ) EnviarVenta(venta entities.Venta) error {
 	}
 
 	err = ch.Publish(
-		"",     // exchange
-		q.Name, // routing key
-		false,  // mandatory
-		false,  // immediate
+		"",
+		q.Name,
+		false,
+		false,
 		amqp.Publishing{
 			ContentType: "application/json",
 			Body:        body,

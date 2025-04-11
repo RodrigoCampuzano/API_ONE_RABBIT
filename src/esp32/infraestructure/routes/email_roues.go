@@ -8,12 +8,12 @@ import (
     "API_ONE/src/esp32/infraestructure/controllers"
 )
 
-func NewVentaRouter(ventaRepo repositories.VentaRepository) http.Handler {
+func NewEmailRouter(emailRepo repositories.EmailRepository) http.Handler {
     mux := http.NewServeMux()
-    ventaService := application.NewVentaService(ventaRepo)
-    ventaController := controllers.NewVentaController(ventaService)
+    emailService := application.NewEmailService(emailRepo)
+    emailController := controllers.NewEmailController(emailService)
     
     // IMPORTANTE: Usar rutas relativas vacías
-    mux.HandleFunc("/", ventaController.EnviarVenta)
+    mux.HandleFunc("/", emailController.EnviarEmail)
     return mux
 }
